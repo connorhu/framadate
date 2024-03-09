@@ -89,7 +89,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Framadate\\": "src/classes/Framadate/"
+            "Framadate\\": "components/framadate/"
         }
     },
     "config": {
