@@ -28,3 +28,7 @@ Thumbs.db
 
 #ics temp file
 out.ics
+
+config/config.php
+composer.lock
+
