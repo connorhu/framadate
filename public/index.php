@@ -18,6 +18,7 @@
  * Auteurs de Framadate/OpenSondage : Framasoft (https://github.com/framasoft)
  */
 
+use Connor\DoReMi\Application;
 use Framadate\Services\PollService;
 use Framadate\Services\LogService;
 use Framadate\Utils;

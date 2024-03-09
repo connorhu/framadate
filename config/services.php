@@ -1,5 +1,6 @@
 <?php
 
+use Connor\DoReMi\Application;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 

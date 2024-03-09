@@ -18,6 +18,8 @@
  * Auteurs de Framadate/OpenSondage : Framasoft (https://github.com/framasoft)
  */
 
+use Connor\DoReMi\Configuration;
+
 return function (Configuration $config) {
     $config->setName('##app-name##');
     $config->setEmail('##app-mail##');
