@@ -60,7 +60,7 @@
         "lint": "find . -name \\*.php -not -path './vendor/*' -not -path './build/*' -not -path './tests/integration/vendor/*' -print0 | xargs -0 -n1 php -l"
     },
     "require": {
-        "php": ">=7.3.0",
+        "php": ">=8.2.0",
         "ext-pdo": "*",
         "ext-json": "*",
         "ext-intl": "*",
