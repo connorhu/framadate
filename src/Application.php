@@ -17,6 +17,14 @@ class Application
 
     public const string ROOT_DIR = __DIR__.'/../';
 
+    /**
+     * @return Configuration
+     */
+    public function getConfiguration(): Configuration
+    {
+        return $this->configuration;
+    }
+
     public function boot(): void
     {
         $this->loadConfigs();
