@@ -3,8 +3,12 @@
 namespace Connor\DoReMi;
 
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Loader\Configurator\RouteConfigurator;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\Routing\Loader\PhpFileLoader;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
@@ -49,7 +53,8 @@ class Application
 
     private function loadRoutes(): void
     {
-        $this->routes = require_once self::ROOT_DIR . '/config/router.php';
+        $loader = new PhpFileLoader(new FileLocator());
+        $this->routes = $loader->load(Application::ROOT_DIR.'/config/routes.php');
     }
 
     private function loadServices(): void
@@ -71,6 +76,8 @@ class Application
 
         $attributes = $matcher->matchRequest($request);
 
-        return new Response('');
+        var_dump($attributes);
+
+        exit;
     }
 }
