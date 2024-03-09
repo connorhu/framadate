@@ -72,6 +72,7 @@
         "erusev/parsedown": "^1.7",
         "egulias/email-validator": "^3.1",
         "sabre/vobject": "~4.1",
+        "symfony/config": "^5.4",
         "symfony/dependency-injection": "^5.4",
         "symfony/routing": "^5.4",
         "symfony/http-foundation": "^5.4"
