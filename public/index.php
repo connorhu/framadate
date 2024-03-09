@@ -1,6 +1,5 @@
 <?php
 
-use Framadate\Services\LogService;
 /**
  * This software is governed by the CeCILL-B license. If a copy of this license
  * is not distributed with this file, you can obtain one at
@@ -20,23 +19,16 @@ use Framadate\Services\LogService;
  */
 
 use Framadate\Services\PollService;
+use Framadate\Services\LogService;
 use Framadate\Utils;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Symfony\Component\Routing\RequestContext;
-
-include_once __DIR__ . '/../src/inc/init.php';
 
 require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/../src/Application.php';
 
-$request = Request::createFromGlobals();
-$context = new RequestContext();
-$context->fromRequest($request);
-$matcher = new UrlMatcher($routes, $context);
-
-$attributes = $matcher->matchRequest($request);
-
-var_dump($attributes);
+$app = new Application();
+$app->boot();
+$response = $app->handleRequest(Application::initRequest());
+$response->send();
 exit;
 
 if (!is_file(CONF_FILENAME)) {

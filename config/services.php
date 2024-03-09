@@ -1,7 +1,11 @@
 <?php
 
+use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-return function (ContainerBuilder  $builder) {
+return function (Application $application): ContainerInterface {
+    $builder = new ContainerBuilder();
 
+    $builder->compile();
+    return $builder;
 };
