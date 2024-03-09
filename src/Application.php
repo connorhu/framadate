@@ -11,8 +11,9 @@ class Application
 {
     private RouteCollection $routes;
     private ContainerInterface $container;
+    private Configuration $configuration;
 
-    private const string ROOT_DIR = __DIR__.'/../';
+    public const string ROOT_DIR = __DIR__.'/../';
 
     public function boot(): void
     {
@@ -23,6 +24,17 @@ class Application
 
     private function loadConfigs(): void
     {
+        $defaultConfiguration = new Configuration();
+
+        $configFile = self::ROOT_DIR . '/config/config.php';
+        if (!is_file($configFile)) {
+            Configurator::createConfiguration();
+        }
+
+        $configurator = require_once $configFile;
+        $configurator($defaultConfiguration);
+
+        $this->configuration = $defaultConfiguration;
     }
 
     private function loadRoutes(): void
