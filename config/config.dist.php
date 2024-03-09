@@ -66,7 +66,7 @@ $ALLOWED_LANGUAGES = [
 const IMAGE_TITRE = 'images/logo-framadate.png';
 
 // Clean URLs, boolean
-const URL_PROPRE = {if in_array($cleanUrl, array('1', 'on', 'true'))}true{else}false{/if};
+const URL_PROPRE = true;// {if in_array($cleanUrl, array('1', 'on', 'true'))}true{else}false{/if};
 
 // Use REMOTE_USER data provided by web server
 const USE_REMOTE_USER =  true;

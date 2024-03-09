@@ -33,12 +33,12 @@ if (ini_get('date.timezone') === '') {
 }
 
 define('ROOT_DIR', __DIR__ . '/../../');
-define('CONF_FILENAME', ROOT_DIR . '/app/inc/config.php');
+define('CONF_FILENAME', ROOT_DIR . '/config/config.php');
 
 require_once __DIR__ . '/constants.php';
 
 if (is_file(CONF_FILENAME)) {
-    @include_once __DIR__ . '/config.php';
+    @include_once CONF_FILENAME;
 
     try {
         // Connection to database
