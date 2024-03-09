@@ -21,7 +21,7 @@
 return function (Configuration $config) {
     $config->setName('##app-name##');
     $config->setEmail('##app-mail##');
-    $config->setResponseAddress('##respose-mail##');
+    $config->setResponseAddress('##response-mail##');
     $config->setDatabaseDsn('##db-connection##');
     $config->setDatabaseUser('##db-user##');
     $config->setDatabasePassword('##db-password##');
