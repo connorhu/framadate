@@ -73,3 +73,5 @@ require_once __DIR__ . '/smarty.php';
 
 $serviceInit = require_once ROOT_DIR . '/config/services.php';
 $container = $serviceInit(new \Symfony\Component\DependencyInjection\ContainerBuilder());
+
+$routes = require_once ROOT_DIR . '/config/router.php';

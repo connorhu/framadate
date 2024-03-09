@@ -21,8 +21,23 @@ use Framadate\Services\LogService;
 
 use Framadate\Services\PollService;
 use Framadate\Utils;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RequestContext;
 
 include_once __DIR__ . '/../src/inc/init.php';
+
+require_once __DIR__.'/../vendor/autoload.php';
+
+$request = Request::createFromGlobals();
+$context = new RequestContext();
+$context->fromRequest($request);
+$matcher = new UrlMatcher($routes, $context);
+
+$attributes = $matcher->matchRequest($request);
+
+var_dump($attributes);
+exit;
 
 if (!is_file(CONF_FILENAME)) {
     header(('Location: ' . Utils::get_server_name() . 'admin/check.php'));
