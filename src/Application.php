@@ -1,5 +1,7 @@
 <?php
 
+namespace Connor\DoReMi;
+
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

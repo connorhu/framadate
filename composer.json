@@ -89,7 +89,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "Framadate\\": "src/classes/Framadate/"
+            "Framadate\\": "components/framadate/",
+            "Connor\\DoReMi\\": "src/"
         }
     },
     "config": {
