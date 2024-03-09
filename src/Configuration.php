@@ -1,5 +1,7 @@
 <?php
 
+namespace Connor\DoReMi;
+
 class Configuration
 {
     private string $name = '';

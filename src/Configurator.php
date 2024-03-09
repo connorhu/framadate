@@ -1,5 +1,7 @@
 <?php
 
+namespace Connor\DoReMi;
+
 class Configurator
 {
     public static function createConfiguration(): void
