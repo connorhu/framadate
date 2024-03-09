@@ -64,8 +64,6 @@
         "ext-pdo": "*",
         "ext-json": "*",
         "ext-intl": "*",
-        "smarty/smarty": "^4.0",
-        "o80/i18n": "dev-develop",
         "phpmailer/phpmailer": "~6.2",
         "ircmaxell/password-compat": "dev-master",
         "roave/security-advisories": "dev-master",
@@ -82,21 +80,10 @@
         "friendsofphp/php-cs-fixer": "^3.2",
         "vimeo/psalm": "^4.15"
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://framagit.org/framasoft/framadate/o80-i18n"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "Framadate\\": "components/framadate/",
             "Connor\\DoReMi\\": "src/"
-        }
-    },
-    "config": {
-        "platform": {
-            "php": "7.3.0"
         }
     }
 }
