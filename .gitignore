@@ -1,15 +1,15 @@
 .htaccess
 .htdigest
 .htpasswd
-admin/stdout.log
+public/admin/stdout.log
 composer.phar
 framanav
 nav
 app/inc/config.php
 vendor
 cache/
-tpl_c/*
-!tpl_c/.gitkeep
+var/tpl_c/*
+!var/tpl_c/.gitkeep
 .php-cs-fixer.cache
 .zanata-cache/
 
