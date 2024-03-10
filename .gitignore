@@ -32,3 +32,4 @@ out.ics
 config/config.php
 composer.lock
 
+var/twig_cache

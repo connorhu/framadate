@@ -3,8 +3,11 @@
 use Connor\DoReMi\Application;
 use Framadate\FramaDB;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\Compiler\RegisterServiceSubscribersPass;
+use Symfony\Component\DependencyInjection\Compiler\ResolveServiceSubscribersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -29,11 +32,35 @@ function configTwig(ContainerBuilder $builder, Application $application): void
 
     $definition = new Definition(Environment::class);
     $definition->setAutoconfigured(true);
+    $definition->setArgument('$loader', $builder->getDefinition(FilesystemLoader::class));
     $definition->setArgument('$options', [
         'cache' => Application::ROOT_DIR.'/var/twig_cache',
     ]);
     $definition->setPublic(true);
-    $builder->setDefinition(FilesystemLoader::class, $definition);
+    $builder->setDefinition(Environment::class, $definition);
+}
+
+function configControllers(ContainerBuilder $builder, Application $application): void
+{
+    foreach (glob(Application::ROOT_DIR.'/src/Controllers/*.php') as $controllerFilePath) {
+        $controllerName = basename($controllerFilePath, '.php');
+        $controllerFCQN = sprintf('Connor\\DoReMi\\Controllers\\%s', $controllerName);
+
+        $definition = new Definition($controllerFCQN);
+        $definition->setAutoconfigured(true);
+        $definition->setAutowired(true);
+        $definition->setPublic(true);
+
+        $refl = new \ReflectionClass($controllerFCQN);
+        if ($refl->implementsInterface(ServiceSubscriberInterface::class)) {
+            $definition->addTag('container.service_subscriber');
+        }
+
+        $builder->setDefinition($controllerFCQN, $definition);
+    }
+
+    $builder->addCompilerPass(new RegisterServiceSubscribersPass());
+    $builder->addCompilerPass(new ResolveServiceSubscribersPass());
 }
 
 return function (Application $application): ContainerInterface {
@@ -41,6 +68,7 @@ return function (Application $application): ContainerInterface {
 
     configDatabase($builder, $application);
     configTwig($builder, $application);
+    configControllers($builder, $application);
 
     $builder->compile();
     return $builder;
