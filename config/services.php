@@ -1,6 +1,7 @@
 <?php
 
 use Connor\DoReMi\Application;
+use Connor\DoReMi\Twig\Extensions\RoutingExtension;
 use Framadate\FramaDB;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Compiler\RegisterServiceSubscribersPass;
@@ -25,6 +26,15 @@ function configDatabase(ContainerBuilder $builder, Application $application): vo
     $builder->setDefinition(FramaDB::class, $definition);
 }
 
+function configTwigExtensions(ContainerBuilder $builder, Application $application): void
+{
+    $definition = new Definition(RoutingExtension::class);
+    $definition->setAutowired(true);
+    $definition->setAutoconfigured(true);
+    $definition->addTag('twig.extension');
+    $builder->setDefinition(RoutingExtension::class, $definition);
+}
+
 function configTwig(ContainerBuilder $builder, Application $application): void
 {
     $definition = new Definition(FilesystemLoader::class);
@@ -39,6 +49,15 @@ function configTwig(ContainerBuilder $builder, Application $application): void
     ]);
     $definition->setPublic(true);
     $builder->setDefinition(Environment::class, $definition);
+
+    $currentMethodCalls = $definition->getMethodCalls();
+    $extensionsMethodCalls = [];
+
+    foreach ($builder->findTaggedServiceIds('twig.extension') as $serviceId => $extension) {
+        $extensionsMethodCalls[] = ['addExtension', [$builder->getDefinition($serviceId)]];
+    }
+
+    $definition->setMethodCalls(array_merge($extensionsMethodCalls, $currentMethodCalls));
 }
 
 function configControllers(ContainerBuilder $builder, Application $application): void
@@ -77,6 +96,7 @@ return function (Application $application): ContainerInterface {
     $builder = new ContainerBuilder();
 
     configDatabase($builder, $application);
+    configTwigExtensions($builder, $application);
     configTwig($builder, $application);
     configUrlGenerator($builder, $application);
     configControllers($builder, $application);
