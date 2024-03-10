@@ -1,12 +1,14 @@
 <?php
 
 use Connor\DoReMi\Application;
+use Connor\DoReMi\Twig\Extensions\RoutingExtension;
 use Framadate\FramaDB;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Compiler\RegisterServiceSubscribersPass;
 use Symfony\Component\DependencyInjection\Compiler\ResolveServiceSubscribersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -24,6 +26,15 @@ function configDatabase(ContainerBuilder $builder, Application $application): vo
     $builder->setDefinition(FramaDB::class, $definition);
 }
 
+function configTwigExtensions(ContainerBuilder $builder, Application $application): void
+{
+    $definition = new Definition(RoutingExtension::class);
+    $definition->setAutowired(true);
+    $definition->setAutoconfigured(true);
+    $definition->addTag('twig.extension');
+    $builder->setDefinition(RoutingExtension::class, $definition);
+}
+
 function configTwig(ContainerBuilder $builder, Application $application): void
 {
     $definition = new Definition(FilesystemLoader::class);
@@ -38,6 +49,15 @@ function configTwig(ContainerBuilder $builder, Application $application): void
     ]);
     $definition->setPublic(true);
     $builder->setDefinition(Environment::class, $definition);
+
+    $currentMethodCalls = $definition->getMethodCalls();
+    $extensionsMethodCalls = [];
+
+    foreach ($builder->findTaggedServiceIds('twig.extension') as $serviceId => $extension) {
+        $extensionsMethodCalls[] = ['addExtension', [$builder->getDefinition($serviceId)]];
+    }
+
+    $definition->setMethodCalls(array_merge($extensionsMethodCalls, $currentMethodCalls));
 }
 
 function configControllers(ContainerBuilder $builder, Application $application): void
@@ -63,11 +83,22 @@ function configControllers(ContainerBuilder $builder, Application $application):
     $builder->addCompilerPass(new ResolveServiceSubscribersPass());
 }
 
+function configUrlGenerator(ContainerBuilder $builder, Application $application): void
+{
+    $definition = new Definition(UrlGenerator::class);
+    $definition->setPublic(true);
+    $definition->setArgument('$routes', $application->getRoutes());
+    $definition->setArgument('$context', $application->getRequestContext());
+    $builder->setDefinition(UrlGenerator::class, $definition);
+}
+
 return function (Application $application): ContainerInterface {
     $builder = new ContainerBuilder();
 
     configDatabase($builder, $application);
+    configTwigExtensions($builder, $application);
     configTwig($builder, $application);
+    configUrlGenerator($builder, $application);
     configControllers($builder, $application);
 
     $builder->compile();
