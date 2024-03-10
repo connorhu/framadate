@@ -17,7 +17,7 @@ class Application
     private ContainerInterface $container;
     private Configuration $configuration;
 
-    public const string ROOT_DIR = __DIR__.'/../';
+    public const string ROOT_DIR = __DIR__.'/..';
 
     /**
      * @return Configuration
@@ -66,6 +66,15 @@ class Application
         return Request::createFromGlobals();
     }
 
+    private function getController($className): object
+    {
+        if (!$this->container->has($className)) {
+            throw new \RuntimeException('controller not found');
+        }
+
+        return $this->container->get($className);
+    }
+
     public function handleRequest(Request $request): Response
     {
         $context = new RequestContext();
@@ -74,8 +83,15 @@ class Application
 
         $attributes = $matcher->matchRequest($request);
 
-        var_dump($attributes);
+        [$controllerName, $methodName] = $attributes['_controller'];
+        $controller = $this->getController($controllerName);
 
-        return new Response('');
+        $response = $controller->{$methodName}($request);
+
+        if (!$response instanceof Response) {
+            throw new \RuntimeException('invalid response');
+        }
+
+        return $response;
     }
 }
