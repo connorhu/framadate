@@ -4,6 +4,10 @@ namespace Connor\DoReMi;
 
 class Configuration
 {
+    private string $env = 'prod';
+
+    private bool $debug = false;
+
     private string $name = '';
 
     private string $email = 'app@application.local';
@@ -36,6 +40,38 @@ class Configuration
     private bool $useSmtp = true;
 
     private string $smtpDsn = 'smtp://localhost';
+
+    /**
+     * @return string
+     */
+    public function getEnv(): string
+    {
+        return $this->env;
+    }
+
+    /**
+     * @param string $env
+     */
+    public function setEnv(string $env): void
+    {
+        $this->env = $env;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDebug(): bool
+    {
+        return $this->debug;
+    }
+
+    /**
+     * @param bool $debug
+     */
+    public function setDebug(bool $debug): void
+    {
+        $this->debug = $debug;
+    }
 
     /**
      * @return string
