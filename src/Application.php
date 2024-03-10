@@ -27,8 +27,24 @@ class Application
         return $this->configuration;
     }
 
+    /**
+     * @return RouteCollection
+     */
+    public function getRoutes(): RouteCollection
+    {
+        return $this->routes;
+    }
+
+    public function getRequestContext(?Request $request = null): RequestContext
+    {
+        $context = new RequestContext();
+        $context->fromRequest($request ?? self::initRequest());
+        return $context;
+    }
+
     public function boot(): void
     {
+        $this->getRequestContext();
         $this->loadConfigs();
         $this->loadRoutes();
         $this->loadServices();
@@ -77,9 +93,7 @@ class Application
 
     public function handleRequest(Request $request): Response
     {
-        $context = new RequestContext();
-        $context->fromRequest($request);
-        $matcher = new UrlMatcher($this->routes, $context);
+        $matcher = new UrlMatcher($this->routes, $this->getRequestContext($request));
 
         $attributes = $matcher->matchRequest($request);
 

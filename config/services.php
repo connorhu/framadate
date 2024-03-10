@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\Compiler\RegisterServiceSubscribersPas
 use Symfony\Component\DependencyInjection\Compiler\ResolveServiceSubscribersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -63,11 +64,21 @@ function configControllers(ContainerBuilder $builder, Application $application):
     $builder->addCompilerPass(new ResolveServiceSubscribersPass());
 }
 
+function configUrlGenerator(ContainerBuilder $builder, Application $application): void
+{
+    $definition = new Definition(UrlGenerator::class);
+    $definition->setPublic(true);
+    $definition->setArgument('$routes', $application->getRoutes());
+    $definition->setArgument('$context', $application->getRequestContext());
+    $builder->setDefinition(UrlGenerator::class, $definition);
+}
+
 return function (Application $application): ContainerInterface {
     $builder = new ContainerBuilder();
 
     configDatabase($builder, $application);
     configTwig($builder, $application);
+    configUrlGenerator($builder, $application);
     configControllers($builder, $application);
 
     $builder->compile();
