@@ -44,9 +44,13 @@ function configTwig(ContainerBuilder $builder, Application $application): void
     $definition = new Definition(Environment::class);
     $definition->setAutoconfigured(true);
     $definition->setArgument('$loader', $builder->getDefinition(FilesystemLoader::class));
-    $definition->setArgument('$options', [
+
+    $options = [
         'cache' => Application::ROOT_DIR.'/var/twig_cache',
-    ]);
+        'debug' => $application->getConfiguration()->isDebug(),
+    ];
+
+    $definition->setArgument('$options', $options);
     $definition->setPublic(true);
     $builder->setDefinition(Environment::class, $definition);
 
